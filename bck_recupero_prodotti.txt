@@ -1,0 +1,36 @@
+import { ManagerSectionHeader } from "@/components/manager-section-header";
+import { getProducts } from "@/lib/shopify/shopify";
+
+export default async function OrdiniPage() {
+  const { nodes: products } = await getProducts({ first: 5 });
+
+  return (
+    <>
+    <ManagerSectionHeader/>
+    <main className="flex flex-1 flex-col">
+      <div className="p-4 lg:p-6">
+        {products.length === 0 ? (
+          <p>Nessun prodotto disponibile.</p>
+        ) : (
+          <ul className="border m-0 p-0">
+            {products.map((product) => (
+              <li key={product.id}>
+                <h2>{product.title}</h2>
+                <p>{product.description}</p>
+
+                {product.featuredImage && (
+                  <img
+                    src={product.featuredImage.url}
+                    alt={product.featuredImage.altText || product.title}
+                    width="240"
+                  />
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </main>
+    </>
+  );
+}
